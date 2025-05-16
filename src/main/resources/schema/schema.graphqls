@@ -1,0 +1,8 @@
+type Query {
+    weather: Weather
+}
+
+type Weather {
+    temperature: Float
+    description: String
+}
