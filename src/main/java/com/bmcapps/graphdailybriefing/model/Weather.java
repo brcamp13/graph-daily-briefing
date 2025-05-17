@@ -2,8 +2,10 @@ package com.bmcapps.graphdailybriefing.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 @AllArgsConstructor
 public class Weather {
     private final double temperature;

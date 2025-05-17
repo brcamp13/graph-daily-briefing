@@ -1,6 +1,5 @@
 package com.bmcapps.graphdailybriefing.service;
 
-
 import com.bmcapps.graphdailybriefing.client.openMeteo.OpenMeteoFeignClient;
 import com.bmcapps.graphdailybriefing.mapper.OpenMeteoGetCurrentToWeatherApiResponseDataMapper;
 import com.bmcapps.graphdailybriefing.model.Weather;
@@ -12,20 +11,20 @@ import org.springframework.stereotype.Service;
 public class WeatherService {
 
     private final OpenMeteoFeignClient openMeteoFeignClient;
-
-    private final OpenMeteoGetCurrentToWeatherApiResponseDataMapper openMeteoGetCurrentToWeatherApiResponseDataMapper;
+    private final OpenMeteoGetCurrentToWeatherApiResponseDataMapper mapper;
 
     @Autowired
-    public WeatherService(OpenMeteoFeignClient openMeteoFeignClient) {
+    public WeatherService(OpenMeteoFeignClient openMeteoFeignClient,
+                          OpenMeteoGetCurrentToWeatherApiResponseDataMapper mapper) {
         this.openMeteoFeignClient = openMeteoFeignClient;
-        this.openMeteoGetCurrentToWeatherApiResponseDataMapper = new OpenMeteoGetCurrentToWeatherApiResponseDataMapper();
+        this.mapper = mapper;
     }
 
     public Weather getWeatherForLocation(String city, String state) {
-        double latitude = 52.52; // Example value
-        double longitude = 13.41; // Example value
+        double latitude = 32.76;
+        double longitude = 96.79;
 
         WeatherApiResponse response = openMeteoFeignClient.getWeatherForecast(latitude, longitude);
-        return openMeteoGetCurrentToWeatherApiResponseDataMapper.mapOpenMeteoResponseToDailyBriefingResponse(response);
+        return mapper.mapOpenMeteoResponseToDailyBriefingResponse(response);
     }
 }

@@ -1,7 +1,6 @@
 package com.bmcapps.graphdailybriefing.dataFetchers;
 
 import com.bmcapps.graphdailybriefing.model.Weather;
-import com.bmcapps.graphdailybriefing.model.weatherApi.GetWeatherApiResponseData;
 import com.bmcapps.graphdailybriefing.service.WeatherService;
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsQuery;

@@ -1,9 +1,11 @@
 package com.bmcapps.graphdailybriefing.mapper;
 
 import com.bmcapps.graphdailybriefing.model.Weather;
-import com.bmcapps.graphdailybriefing.model.weatherApi.GetWeatherApiResponseData;
 import com.bmcapps.graphdailybriefing.model.weatherApi.WeatherApiResponse;
+import org.springframework.stereotype.Component;
 
+
+@Component
 public class OpenMeteoGetCurrentToWeatherApiResponseDataMapper {
 
     public Weather mapOpenMeteoResponseToDailyBriefingResponse(WeatherApiResponse response) {
