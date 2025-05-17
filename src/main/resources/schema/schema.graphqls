@@ -5,8 +5,8 @@ type Query {
 type Weather {
     temperature: Float
     precipitation: Float
-    relativeHumidity: Float
+    relativeHumidity: Int,
     windSpeed: Float
-    windDirection: String
+    windDirection: Int,
     windGusts: Float
 }
