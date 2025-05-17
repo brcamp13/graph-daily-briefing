@@ -1,8 +1,12 @@
 type Query {
-    weather: Weather
+    weather(city: String!, state: String!): Weather
 }
 
 type Weather {
     temperature: Float
-    description: String
+    precipitation: Float
+    relativeHumidity: Float
+    windSpeed: Float
+    windDirection: String
+    windGusts: Float
 }
