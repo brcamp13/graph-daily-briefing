@@ -1,12 +1,13 @@
 package com.bmcapps.graphdailybriefing.mapper;
 
+import com.bmcapps.graphdailybriefing.model.Weather;
 import com.bmcapps.graphdailybriefing.model.weatherApi.GetWeatherApiResponseData;
 import com.bmcapps.graphdailybriefing.model.weatherApi.WeatherApiResponse;
 
 public class OpenMeteoGetCurrentToWeatherApiResponseDataMapper {
 
-    public GetWeatherApiResponseData mapOpenMeteoResponseToDailyBriefingResponse(WeatherApiResponse response) {
-        GetWeatherApiResponseData getWeatherApiResponseData = new GetWeatherApiResponseData(
+    public Weather mapOpenMeteoResponseToDailyBriefingResponse(WeatherApiResponse response) {
+        Weather weatherDataFromApi = new Weather(
                 response.getCurrent().getTemperature2m(),
                 response.getCurrent().getPrecipitation(),
                 response.getCurrent().getRelativeHumidity2m(),
@@ -15,6 +16,6 @@ public class OpenMeteoGetCurrentToWeatherApiResponseDataMapper {
                 response.getCurrent().getWindGusts10m()
         );
 
-        return getWeatherApiResponseData;
+        return weatherDataFromApi;
     }
 }

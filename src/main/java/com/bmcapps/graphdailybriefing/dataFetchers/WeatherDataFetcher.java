@@ -21,12 +21,6 @@ public class WeatherDataFetcher {
 
     @DgsQuery(field = "weather")
     public Weather getWeather(@InputArgument String city, @InputArgument String state) {
-        GetWeatherApiResponseData getWeatherApiResponseData = weatherService.getWeatherForLocation(city, state);
-        return new Weather(getWeatherApiResponseData.getTemperature(),
-                getWeatherApiResponseData.getPrecipitation(),
-                getWeatherApiResponseData.getRelativeHumidity(),
-                getWeatherApiResponseData.getWindSpeed(),
-                getWeatherApiResponseData.getWindDirection(),
-                getWeatherApiResponseData.getWindGusts());
+        return weatherService.getWeatherForLocation(city, state);
     }
 }
