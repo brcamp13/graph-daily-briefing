@@ -1,5 +1,6 @@
 type Query {
     weather(city: String!, state: String!): Weather
+    cryptocurrencies(slugs: [String!]!): [CryptoCurrency!]!
 }
 
 type Weather {
@@ -9,4 +10,14 @@ type Weather {
     windSpeed: Float
     windDirection: Int,
     windGusts: Float
+}
+
+type CryptoCurrency {
+    name: String
+    symbol: String
+    price: Float
+    marketCap: Float
+    percentChange24h: Float
+    percentChange60d: Float
+    percentChange90d: Float
 }

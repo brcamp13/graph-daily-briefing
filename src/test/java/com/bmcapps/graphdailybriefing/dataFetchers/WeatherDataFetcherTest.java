@@ -1,6 +1,6 @@
 package com.bmcapps.graphdailybriefing.dataFetchers;
 
-import com.bmcapps.graphdailybriefing.model.Weather;
+import com.bmcapps.graphdailybriefing.model.graphSchema.WeatherSchema;
 import com.bmcapps.graphdailybriefing.service.WeatherService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,12 +31,12 @@ class WeatherDataFetcherTest {
         // Arrange
         String city = "Dallas";
         String state = "TX";
-        Weather expectedWeather = new Weather(22.5, 0.5, 65, 12.3, 270, 18.7);
+        WeatherSchema expectedWeather = new WeatherSchema(22.5, 0.5, 65, 12.3, 270, 18.7);
 
         when(weatherService.getWeatherForLocation(city, state)).thenReturn(expectedWeather);
 
         // Act
-        Weather result = weatherDataFetcher.getWeather(city, state);
+        WeatherSchema result = weatherDataFetcher.getWeather(city, state);
 
         // Assert
         assertNotNull(result);

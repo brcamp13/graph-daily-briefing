@@ -1,15 +1,15 @@
 package com.bmcapps.graphdailybriefing.mapper;
 
-import com.bmcapps.graphdailybriefing.model.Weather;
-import com.bmcapps.graphdailybriefing.model.weatherApi.WeatherApiResponse;
+import com.bmcapps.graphdailybriefing.model.graphSchema.WeatherSchema;
+import com.bmcapps.graphdailybriefing.model.openMeteoApi.WeatherApiResponse;
 import org.springframework.stereotype.Component;
 
 
 @Component
-public class OpenMeteoGetCurrentToWeatherApiResponseDataMapper {
+public class OpenMeteoGetCurrentToWeatherSchemaMapper {
 
-    public Weather mapOpenMeteoResponseToDailyBriefingResponse(WeatherApiResponse response) {
-        Weather weatherDataFromApi = new Weather(
+    public WeatherSchema mapOpenMeteoResponseToDailyBriefingResponse(WeatherApiResponse response) {
+        WeatherSchema weatherDataFromApi = new WeatherSchema(
                 response.getCurrent().getTemperature2m(),
                 response.getCurrent().getPrecipitation(),
                 response.getCurrent().getRelativeHumidity2m(),

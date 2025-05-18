@@ -1,10 +1,7 @@
 package com.bmcapps.graphdailybriefing.client.openMeteo;
 
 
-public class CommonConstants {
-    // Endpoint
-    public static final String FORECAST_ENDPOINT = "/forecast";
-
+public class OpenMeteoConstants {
     // Request parameter names
     public static final String PARAM_LATITUDE = "latitude";
     public static final String PARAM_LONGITUDE = "longitude";

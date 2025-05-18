@@ -2,9 +2,9 @@ package com.bmcapps.graphdailybriefing.service;
 
 
 import com.bmcapps.graphdailybriefing.client.openMeteo.OpenMeteoFeignClient;
-import com.bmcapps.graphdailybriefing.mapper.OpenMeteoGetCurrentToWeatherApiResponseDataMapper;
-import com.bmcapps.graphdailybriefing.model.Weather;
-import com.bmcapps.graphdailybriefing.model.weatherApi.WeatherApiResponse;
+import com.bmcapps.graphdailybriefing.mapper.OpenMeteoGetCurrentToWeatherSchemaMapper;
+import com.bmcapps.graphdailybriefing.model.graphSchema.WeatherSchema;
+import com.bmcapps.graphdailybriefing.model.openMeteoApi.WeatherApiResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +23,7 @@ class WeatherServiceTest {
     private OpenMeteoFeignClient openMeteoFeignClient;
 
     @Mock
-    private OpenMeteoGetCurrentToWeatherApiResponseDataMapper mapper;
+    private OpenMeteoGetCurrentToWeatherSchemaMapper mapper;
 
     private WeatherService weatherService;
 
@@ -38,13 +38,13 @@ class WeatherServiceTest {
         String city = "Dallas";
         String state = "TX";
         WeatherApiResponse mockResponse = new WeatherApiResponse();
-        Weather expectedWeather = new Weather(20.0, 20.0, 3, 10.0, 180, 15.0);
+        WeatherSchema expectedWeather = new WeatherSchema(20.0, 20.0, 3, 10.0, 180, 15.0);
 
         when(openMeteoFeignClient.getWeatherForecast(anyDouble(), anyDouble())).thenReturn(mockResponse);
         when(mapper.mapOpenMeteoResponseToDailyBriefingResponse(mockResponse)).thenReturn(expectedWeather);
 
         // Act
-        Weather result = weatherService.getWeatherForLocation(city, state);
+        WeatherSchema result = weatherService.getWeatherForLocation(city, state);
 
         // Assert
         assertNotNull(result);

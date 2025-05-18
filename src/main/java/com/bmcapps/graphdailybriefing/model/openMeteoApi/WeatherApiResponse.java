@@ -1,4 +1,4 @@
-package com.bmcapps.graphdailybriefing.model.weatherApi;
+package com.bmcapps.graphdailybriefing.model.openMeteoApi;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

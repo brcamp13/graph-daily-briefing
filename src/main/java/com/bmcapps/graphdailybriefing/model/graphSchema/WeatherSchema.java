@@ -1,12 +1,11 @@
-package com.bmcapps.graphdailybriefing.model;
+package com.bmcapps.graphdailybriefing.model.graphSchema;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 @AllArgsConstructor
-public class Weather {
+public class WeatherSchema {
     private final double temperature;
     private final double precipitation;
     private final int relativeHumidity;

@@ -1,8 +1,8 @@
 package com.bmcapps.graphdailybriefing.mapper;
 
-import com.bmcapps.graphdailybriefing.model.Weather;
-import com.bmcapps.graphdailybriefing.model.weatherApi.Current;
-import com.bmcapps.graphdailybriefing.model.weatherApi.WeatherApiResponse;
+import com.bmcapps.graphdailybriefing.model.graphSchema.WeatherSchema;
+import com.bmcapps.graphdailybriefing.model.openMeteoApi.Current;
+import com.bmcapps.graphdailybriefing.model.openMeteoApi.WeatherApiResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,11 +11,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class OpenMeteoGetCurrentToWeatherApiResponseDataMapperTest {
 
-    private OpenMeteoGetCurrentToWeatherApiResponseDataMapper mapper;
+    private OpenMeteoGetCurrentToWeatherSchemaMapper mapper;
 
     @BeforeEach
     void setUp() {
-        mapper = new OpenMeteoGetCurrentToWeatherApiResponseDataMapper();
+        mapper = new OpenMeteoGetCurrentToWeatherSchemaMapper();
     }
 
     @Test
@@ -32,7 +32,7 @@ class OpenMeteoGetCurrentToWeatherApiResponseDataMapperTest {
         response.setCurrent(current);
 
         // Act
-        Weather result = mapper.mapOpenMeteoResponseToDailyBriefingResponse(response);
+        WeatherSchema result = mapper.mapOpenMeteoResponseToDailyBriefingResponse(response);
 
         // Assert
         assertNotNull(result);
@@ -58,7 +58,7 @@ class OpenMeteoGetCurrentToWeatherApiResponseDataMapperTest {
         response.setCurrent(current);
 
         // Act
-        Weather result = mapper.mapOpenMeteoResponseToDailyBriefingResponse(response);
+        WeatherSchema result = mapper.mapOpenMeteoResponseToDailyBriefingResponse(response);
 
         // Assert
         assertNotNull(result);
