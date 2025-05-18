@@ -21,10 +21,13 @@ public class CryptoService {
     private final CoinMarketCapGetFearGreedToCryptoMarketSchemaMapper coinMarketCapGetFearGreedToCryptoMarketSchemaMapper;
 
     @Autowired
-    public CryptoService(CoinMarketCapFeignClient coinMarketCapFeignClient, CoinMarketCapGetQuotesToCryptocurrencySchemaMapper coinMarketCapGetQuotesToCryptocurrencySchemaMapper) {
+    public CryptoService(CoinMarketCapFeignClient coinMarketCapFeignClient,
+                         CoinMarketCapGetQuotesToCryptocurrencySchemaMapper coinMarketCapGetQuotesToCryptocurrencySchemaMapper,
+                         CoinMarketCapGetFearGreedToCryptoMarketSchemaMapper coinMarketCapGetFearGreedToCryptoMarketSchemaMapper
+    ) {
         this.coinMarketCapFeignClient = coinMarketCapFeignClient;
         this.coinMarketCapGetQuotesToCryptocurrencySchemaMapper = coinMarketCapGetQuotesToCryptocurrencySchemaMapper;
-        this.coinMarketCapGetFearGreedToCryptoMarketSchemaMapper = new CoinMarketCapGetFearGreedToCryptoMarketSchemaMapper();
+        this.coinMarketCapGetFearGreedToCryptoMarketSchemaMapper = coinMarketCapGetFearGreedToCryptoMarketSchemaMapper;
     }
 
     public List<CryptoSchema> getCryptocurrencies(List<String> slugs) {

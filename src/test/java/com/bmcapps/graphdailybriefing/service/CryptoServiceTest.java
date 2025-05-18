@@ -130,7 +130,8 @@ class CryptoServiceTest {
     void getCryptoMarketData_ShouldReturnMappedMarketData() {
         // Arrange
         when(coinMarketCapFeignClient.getFearAndGreedIndex()).thenReturn(fearGreedApiResponse);
-
+        when(coinMarketCapGetFearGreedToCryptoMarketSchemaMapper.mapToCryptoMarketDataSchema(fearGreedApiResponse))
+                .thenReturn(expectedMarketData);
 
         // Act
         CryptoMarketDataSchema result = cryptoService.getCryptoMarketData();
@@ -139,5 +140,6 @@ class CryptoServiceTest {
         assertNotNull(result);
         assertEquals(expectedMarketData, result);
         verify(coinMarketCapFeignClient).getFearAndGreedIndex();
+        verify(coinMarketCapGetFearGreedToCryptoMarketSchemaMapper).mapToCryptoMarketDataSchema(fearGreedApiResponse);
     }
 }
