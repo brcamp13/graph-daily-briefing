@@ -1,7 +1,7 @@
 type Query {
     weather(city: String!, state: String!): Weather
     cryptocurrencies(slugs: [String!]!): [CryptoCurrency!]!
-    cryptoMarketData: CryptoMarketData
+    cryptoMarketData: CryptoMarketData!
 }
 
 type Weather {
