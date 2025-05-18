@@ -1,8 +1,11 @@
 package com.bmcapps.graphdailybriefing.model.graphSchema;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 
 @Data
+@NoArgsConstructor
 public class CryptoSchema {
     private String name;
     private String symbol;

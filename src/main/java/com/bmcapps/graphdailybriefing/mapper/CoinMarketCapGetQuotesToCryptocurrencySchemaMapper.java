@@ -3,6 +3,7 @@ package com.bmcapps.graphdailybriefing.mapper;
 import com.bmcapps.graphdailybriefing.model.coinMarketCapApi.CoinMarketCapApiResponse;
 import com.bmcapps.graphdailybriefing.model.coinMarketCapApi.CryptoCurrency;
 import com.bmcapps.graphdailybriefing.model.graphSchema.CryptoSchema;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
 
 
 
+@Component
 public class CoinMarketCapGetQuotesToCryptocurrencySchemaMapper {
     public List<CryptoSchema> mapCoinMarketCapGetQuotesToCryptoSchema(CoinMarketCapApiResponse response) {
         Map<String, CryptoCurrency> apiCryptos = response.getData();
