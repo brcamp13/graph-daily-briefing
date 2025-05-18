@@ -1,6 +1,6 @@
 package com.bmcapps.graphdailybriefing.dataFetchers;
 
-import com.bmcapps.graphdailybriefing.model.Weather;
+import com.bmcapps.graphdailybriefing.model.graphSchema.WeatherSchema;
 import com.bmcapps.graphdailybriefing.service.WeatherService;
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsQuery;
@@ -19,7 +19,7 @@ public class WeatherDataFetcher {
     }
 
     @DgsQuery(field = "weather")
-    public Weather getWeather(@InputArgument String city, @InputArgument String state) {
+    public WeatherSchema getWeather(@InputArgument String city, @InputArgument String state) {
         return weatherService.getWeatherForLocation(city, state);
     }
 }

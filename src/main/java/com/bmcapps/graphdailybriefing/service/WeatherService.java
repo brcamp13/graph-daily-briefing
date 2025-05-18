@@ -1,9 +1,9 @@
 package com.bmcapps.graphdailybriefing.service;
 
 import com.bmcapps.graphdailybriefing.client.openMeteo.OpenMeteoFeignClient;
-import com.bmcapps.graphdailybriefing.mapper.OpenMeteoGetCurrentToWeatherApiResponseDataMapper;
-import com.bmcapps.graphdailybriefing.model.Weather;
-import com.bmcapps.graphdailybriefing.model.weatherApi.WeatherApiResponse;
+import com.bmcapps.graphdailybriefing.mapper.OpenMeteoGetCurrentToWeatherSchemaMapper;
+import com.bmcapps.graphdailybriefing.model.graphSchema.WeatherSchema;
+import com.bmcapps.graphdailybriefing.model.openMeteoApi.WeatherApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,16 +11,16 @@ import org.springframework.stereotype.Service;
 public class WeatherService {
 
     private final OpenMeteoFeignClient openMeteoFeignClient;
-    private final OpenMeteoGetCurrentToWeatherApiResponseDataMapper mapper;
+    private final OpenMeteoGetCurrentToWeatherSchemaMapper mapper;
 
     @Autowired
     public WeatherService(OpenMeteoFeignClient openMeteoFeignClient,
-                          OpenMeteoGetCurrentToWeatherApiResponseDataMapper mapper) {
+                          OpenMeteoGetCurrentToWeatherSchemaMapper mapper) {
         this.openMeteoFeignClient = openMeteoFeignClient;
         this.mapper = mapper;
     }
 
-    public Weather getWeatherForLocation(String city, String state) {
+    public WeatherSchema getWeatherForLocation(String city, String state) {
         double latitude = 32.76;
         double longitude = 96.79;
 
