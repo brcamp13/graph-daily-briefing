@@ -2,8 +2,11 @@ package com.bmcapps.graphdailybriefing.service;
 
 
 import com.bmcapps.graphdailybriefing.client.coinMarketCap.CoinMarketCapFeignClient;
+import com.bmcapps.graphdailybriefing.mapper.CoinMarketCapGetFearGreedToCryptoMarketSchemaMapper;
 import com.bmcapps.graphdailybriefing.mapper.CoinMarketCapGetQuotesToCryptocurrencySchemaMapper;
-import com.bmcapps.graphdailybriefing.model.coinMarketCapApi.CoinMarketCapApiResponse;
+import com.bmcapps.graphdailybriefing.model.coinMarketCapApi.fearAndGreed.CoinMarketCapFearGreedApiResponse;
+import com.bmcapps.graphdailybriefing.model.coinMarketCapApi.quotes.CoinMarketCapQuotesApiResponse;
+import com.bmcapps.graphdailybriefing.model.graphSchema.CryptoMarketDataSchema;
 import com.bmcapps.graphdailybriefing.model.graphSchema.CryptoSchema;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,18 +17,28 @@ import java.util.List;
 public class CryptoService {
 
     private final CoinMarketCapFeignClient coinMarketCapFeignClient;
-    private final CoinMarketCapGetQuotesToCryptocurrencySchemaMapper mapper;
+    private final CoinMarketCapGetQuotesToCryptocurrencySchemaMapper coinMarketCapGetQuotesToCryptocurrencySchemaMapper;
+    private final CoinMarketCapGetFearGreedToCryptoMarketSchemaMapper coinMarketCapGetFearGreedToCryptoMarketSchemaMapper;
 
     @Autowired
-    public CryptoService(CoinMarketCapFeignClient coinMarketCapFeignClient, CoinMarketCapGetQuotesToCryptocurrencySchemaMapper mapper) {
+    public CryptoService(CoinMarketCapFeignClient coinMarketCapFeignClient,
+                         CoinMarketCapGetQuotesToCryptocurrencySchemaMapper coinMarketCapGetQuotesToCryptocurrencySchemaMapper,
+                         CoinMarketCapGetFearGreedToCryptoMarketSchemaMapper coinMarketCapGetFearGreedToCryptoMarketSchemaMapper
+    ) {
         this.coinMarketCapFeignClient = coinMarketCapFeignClient;
-        this.mapper = mapper;
+        this.coinMarketCapGetQuotesToCryptocurrencySchemaMapper = coinMarketCapGetQuotesToCryptocurrencySchemaMapper;
+        this.coinMarketCapGetFearGreedToCryptoMarketSchemaMapper = coinMarketCapGetFearGreedToCryptoMarketSchemaMapper;
     }
 
     public List<CryptoSchema> getCryptocurrencies(List<String> slugs) {
         String slugsParam = String.join(",", slugs);
-        CoinMarketCapApiResponse response = coinMarketCapFeignClient.getCryptocurrencyQuotes(slugsParam);
+        CoinMarketCapQuotesApiResponse response = coinMarketCapFeignClient.getCryptocurrencyQuotes(slugsParam);
 
-        return mapper.mapCoinMarketCapGetQuotesToCryptoSchema(response);
+        return coinMarketCapGetQuotesToCryptocurrencySchemaMapper.mapCoinMarketCapGetQuotesToCryptoSchema(response);
+    }
+
+    public CryptoMarketDataSchema getCryptoMarketData() {
+        CoinMarketCapFearGreedApiResponse response = coinMarketCapFeignClient.getFearAndGreedIndex();
+        return coinMarketCapGetFearGreedToCryptoMarketSchemaMapper.mapToCryptoMarketDataSchema(response);
     }
 }

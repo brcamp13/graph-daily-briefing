@@ -1,8 +1,12 @@
 package com.bmcapps.graphdailybriefing.service;
 
 import com.bmcapps.graphdailybriefing.client.coinMarketCap.CoinMarketCapFeignClient;
+import com.bmcapps.graphdailybriefing.mapper.CoinMarketCapGetFearGreedToCryptoMarketSchemaMapper;
 import com.bmcapps.graphdailybriefing.mapper.CoinMarketCapGetQuotesToCryptocurrencySchemaMapper;
-import com.bmcapps.graphdailybriefing.model.coinMarketCapApi.CoinMarketCapApiResponse;
+import com.bmcapps.graphdailybriefing.model.coinMarketCapApi.fearAndGreed.CoinMarketCapFearGreedApiResponse;
+import com.bmcapps.graphdailybriefing.model.coinMarketCapApi.fearAndGreed.DataResponse;
+import com.bmcapps.graphdailybriefing.model.coinMarketCapApi.quotes.CoinMarketCapQuotesApiResponse;
+import com.bmcapps.graphdailybriefing.model.graphSchema.CryptoMarketDataSchema;
 import com.bmcapps.graphdailybriefing.model.graphSchema.CryptoSchema;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,19 +32,30 @@ class CryptoServiceTest {
     private CoinMarketCapFeignClient coinMarketCapFeignClient;
 
     @Mock
-    private CoinMarketCapGetQuotesToCryptocurrencySchemaMapper mapper;
+    private CoinMarketCapGetQuotesToCryptocurrencySchemaMapper coinMarketCapGetQuotesToCryptocurrencySchemaMapper;
+
+    @Mock
+    private CoinMarketCapGetFearGreedToCryptoMarketSchemaMapper coinMarketCapGetFearGreedToCryptoMarketSchemaMapper;
 
     @InjectMocks
     private CryptoService cryptoService;
 
+    // Coin market cap current quote setup
     private List<String> slugs;
-    private CoinMarketCapApiResponse apiResponse;
+    private CoinMarketCapQuotesApiResponse coinMarketCapQuotesApiResponse;
     private List<CryptoSchema> expectedCryptoSchemas;
+
+    // Coin market cap fear greed setup
+    CoinMarketCapFearGreedApiResponse fearGreedApiResponse;
+    CryptoMarketDataSchema expectedMarketData;
 
     @BeforeEach
     void setUp() {
+
+        // Initialize the CoinMarketCapQuotesApiResponse and expectedCryptoSchemas
+
         slugs = Arrays.asList("Bitcoin", "Ethereum");
-        apiResponse = new CoinMarketCapApiResponse();
+        coinMarketCapQuotesApiResponse = new CoinMarketCapQuotesApiResponse();
 
         CryptoSchema bitcoinSchema = new CryptoSchema();
         bitcoinSchema.setName("Bitcoin");
@@ -59,14 +74,25 @@ class CryptoServiceTest {
         ethereumSchema.setMarketCap(500000000.0);
 
         expectedCryptoSchemas = Arrays.asList(bitcoinSchema, ethereumSchema);
+
+        // Initialize the CoinMarketCapFearGreedApiResponse and expectedMarketData
+
+        fearGreedApiResponse = new CoinMarketCapFearGreedApiResponse();
+        fearGreedApiResponse.setData(new DataResponse());
+        fearGreedApiResponse.getData().setValue(55);
+        fearGreedApiResponse.getData().setValueClassification("Neutral");
+
+        expectedMarketData = new CryptoMarketDataSchema();
+        expectedMarketData.setFearAndGreedIndexValue(fearGreedApiResponse.getData().getValue());
+        expectedMarketData.setFearAndGreedIndexValueClassification(fearGreedApiResponse.getData().getValueClassification());
     }
 
     @Test
     void getCryptocurrencies_ShouldReturnMappedCryptoData() {
         // Arrange
         String slugsParam = String.join(",", slugs);
-        when(coinMarketCapFeignClient.getCryptocurrencyQuotes(slugsParam)).thenReturn(apiResponse);
-        when(mapper.mapCoinMarketCapGetQuotesToCryptoSchema(apiResponse)).thenReturn(expectedCryptoSchemas);
+        when(coinMarketCapFeignClient.getCryptocurrencyQuotes(slugsParam)).thenReturn(coinMarketCapQuotesApiResponse);
+        when(coinMarketCapGetQuotesToCryptocurrencySchemaMapper.mapCoinMarketCapGetQuotesToCryptoSchema(coinMarketCapQuotesApiResponse)).thenReturn(expectedCryptoSchemas);
 
         // Act
         List<CryptoSchema> result = cryptoService.getCryptocurrencies(slugs);
@@ -76,7 +102,7 @@ class CryptoServiceTest {
         assertEquals(expectedCryptoSchemas.size(), result.size());
         assertEquals(expectedCryptoSchemas, result);
         verify(coinMarketCapFeignClient).getCryptocurrencyQuotes(slugsParam);
-        verify(mapper).mapCoinMarketCapGetQuotesToCryptoSchema(apiResponse);
+        verify(coinMarketCapGetQuotesToCryptocurrencySchemaMapper).mapCoinMarketCapGetQuotesToCryptoSchema(coinMarketCapQuotesApiResponse);
     }
 
     @Test
@@ -84,11 +110,11 @@ class CryptoServiceTest {
         // Arrange
         List<String> emptySlugs = Collections.emptyList();
         String slugsParam = ""; // Empty string when slugs list is empty
-        CoinMarketCapApiResponse emptyApiResponse = new CoinMarketCapApiResponse(); // Or null, depending on expected behavior
+        CoinMarketCapQuotesApiResponse emptyApiResponse = new CoinMarketCapQuotesApiResponse(); // Or null, depending on expected behavior
         List<CryptoSchema> emptyExpectedSchemas = Collections.emptyList();
 
         when(coinMarketCapFeignClient.getCryptocurrencyQuotes(slugsParam)).thenReturn(emptyApiResponse);
-        when(mapper.mapCoinMarketCapGetQuotesToCryptoSchema(emptyApiResponse)).thenReturn(emptyExpectedSchemas);
+        when(coinMarketCapGetQuotesToCryptocurrencySchemaMapper.mapCoinMarketCapGetQuotesToCryptoSchema(emptyApiResponse)).thenReturn(emptyExpectedSchemas);
 
         // Act
         List<CryptoSchema> result = cryptoService.getCryptocurrencies(emptySlugs);
@@ -97,6 +123,23 @@ class CryptoServiceTest {
         assertNotNull(result);
         assertEquals(0, result.size());
         verify(coinMarketCapFeignClient).getCryptocurrencyQuotes(slugsParam);
-        verify(mapper).mapCoinMarketCapGetQuotesToCryptoSchema(emptyApiResponse);
+        verify(coinMarketCapGetQuotesToCryptocurrencySchemaMapper).mapCoinMarketCapGetQuotesToCryptoSchema(emptyApiResponse);
+    }
+
+    @Test
+    void getCryptoMarketData_ShouldReturnMappedMarketData() {
+        // Arrange
+        when(coinMarketCapFeignClient.getFearAndGreedIndex()).thenReturn(fearGreedApiResponse);
+        when(coinMarketCapGetFearGreedToCryptoMarketSchemaMapper.mapToCryptoMarketDataSchema(fearGreedApiResponse))
+                .thenReturn(expectedMarketData);
+
+        // Act
+        CryptoMarketDataSchema result = cryptoService.getCryptoMarketData();
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(expectedMarketData, result);
+        verify(coinMarketCapFeignClient).getFearAndGreedIndex();
+        verify(coinMarketCapGetFearGreedToCryptoMarketSchemaMapper).mapToCryptoMarketDataSchema(fearGreedApiResponse);
     }
 }

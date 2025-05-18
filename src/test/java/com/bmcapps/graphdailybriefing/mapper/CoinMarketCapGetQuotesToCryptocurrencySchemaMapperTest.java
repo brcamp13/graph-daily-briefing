@@ -1,9 +1,9 @@
 package com.bmcapps.graphdailybriefing.mapper;
 
-import com.bmcapps.graphdailybriefing.model.coinMarketCapApi.CoinMarketCapApiResponse;
-import com.bmcapps.graphdailybriefing.model.coinMarketCapApi.CryptoCurrency;
-import com.bmcapps.graphdailybriefing.model.coinMarketCapApi.Quote;
-import com.bmcapps.graphdailybriefing.model.coinMarketCapApi.UsdData;
+import com.bmcapps.graphdailybriefing.model.coinMarketCapApi.quotes.CoinMarketCapQuotesApiResponse;
+import com.bmcapps.graphdailybriefing.model.coinMarketCapApi.quotes.CryptoCurrency;
+import com.bmcapps.graphdailybriefing.model.coinMarketCapApi.quotes.Quote;
+import com.bmcapps.graphdailybriefing.model.coinMarketCapApi.quotes.UsdData;
 import com.bmcapps.graphdailybriefing.model.graphSchema.CryptoSchema;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ class CoinMarketCapGetQuotesToCryptocurrencySchemaMapperTest {
     @Test
     void map_WithFullUsdQuote_ShouldPopulateAllFields() {
         // Arrange
-        CoinMarketCapApiResponse response = new CoinMarketCapApiResponse();
+        CoinMarketCapQuotesApiResponse response = new CoinMarketCapQuotesApiResponse();
         CryptoCurrency crypto = new CryptoCurrency();
         crypto.setName("Bitcoin");
         crypto.setSymbol("BTC");
@@ -58,7 +58,7 @@ class CoinMarketCapGetQuotesToCryptocurrencySchemaMapperTest {
     @Test
     void map_WithoutQuote_ShouldDefaultNumericFieldsToZero() {
         // Arrange
-        CoinMarketCapApiResponse response = new CoinMarketCapApiResponse();
+        CoinMarketCapQuotesApiResponse response = new CoinMarketCapQuotesApiResponse();
         CryptoCurrency crypto = new CryptoCurrency();
         crypto.setName("Ethereum");
         crypto.setSymbol("ETH");
@@ -83,7 +83,7 @@ class CoinMarketCapGetQuotesToCryptocurrencySchemaMapperTest {
     @Test
     void map_WithEmptyData_ShouldReturnEmptyList() {
         // Arrange
-        CoinMarketCapApiResponse response = new CoinMarketCapApiResponse();
+        CoinMarketCapQuotesApiResponse response = new CoinMarketCapQuotesApiResponse();
         response.setData(new HashMap<>());
 
         // Act

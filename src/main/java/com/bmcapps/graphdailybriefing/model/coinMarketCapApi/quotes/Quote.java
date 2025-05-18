@@ -1,4 +1,4 @@
-package com.bmcapps.graphdailybriefing.model.coinMarketCapApi;
+package com.bmcapps.graphdailybriefing.model.coinMarketCapApi.quotes;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
