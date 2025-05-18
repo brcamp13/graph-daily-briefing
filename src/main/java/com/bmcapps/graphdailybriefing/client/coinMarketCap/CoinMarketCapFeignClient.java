@@ -17,6 +17,6 @@ public interface CoinMarketCapFeignClient {
             @RequestParam(PARAM_SLUG) String cryptoSlugs
     );
 
-    @GetMapping("/v3/fear-and-greed/latest")
+    @GetMapping("v3/fear-and-greed/latest")
     CoinMarketCapFearGreedApiResponse getFearAndGreedIndex();
 }
