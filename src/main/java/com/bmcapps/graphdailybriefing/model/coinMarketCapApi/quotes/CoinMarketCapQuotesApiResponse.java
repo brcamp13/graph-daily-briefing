@@ -1,4 +1,4 @@
-package com.bmcapps.graphdailybriefing.model.coinMarketCapApi;
+package com.bmcapps.graphdailybriefing.model.coinMarketCapApi.quotes;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
@@ -6,6 +6,6 @@ import java.util.Map;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CoinMarketCapApiResponse {
+public class CoinMarketCapQuotesApiResponse {
     private Map<String, CryptoCurrency> data;
 }
