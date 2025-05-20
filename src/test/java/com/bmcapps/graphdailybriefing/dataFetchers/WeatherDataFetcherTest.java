@@ -3,6 +3,7 @@ package com.bmcapps.graphdailybriefing.dataFetchers;
 import com.bmcapps.graphdailybriefing.WeatherRequest;
 import com.bmcapps.graphdailybriefing.WeatherResponse;
 import com.bmcapps.graphdailybriefing.WeatherServiceGrpc;
+import com.bmcapps.graphdailybriefing.mapper.WeatherMsResponseToWeatherSchemaMapper;
 import com.bmcapps.graphdailybriefing.model.graphSchema.WeatherSchema;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,11 +22,14 @@ class WeatherDataFetcherTest {
     @Mock
     private WeatherServiceGrpc.WeatherServiceBlockingStub weatherStub;
 
+    @Mock
+    private WeatherMsResponseToWeatherSchemaMapper mapper;
+
     private WeatherDataFetcher weatherDataFetcher;
 
     @BeforeEach
     void setUp() {
-        weatherDataFetcher = new WeatherDataFetcher(weatherStub);
+        weatherDataFetcher = new WeatherDataFetcher(weatherStub, mapper);
     }
 
     @Test
@@ -48,6 +52,7 @@ class WeatherDataFetcherTest {
         WeatherSchema expectedWeather = new WeatherSchema(22.5, 0.5, 65, 12.3, 270, 18.7);
 
         when(weatherStub.getWeather(request)).thenReturn(response);
+        when(mapper.mapWeatherMsResponseToWeatherSchema(response)).thenReturn(expectedWeather);
 
         // Act
         WeatherSchema result = weatherDataFetcher.getWeather(city, state);
@@ -61,5 +66,6 @@ class WeatherDataFetcherTest {
         assertEquals(expectedWeather.getWindDirection(), result.getWindDirection());
         assertEquals(expectedWeather.getWindGusts(), result.getWindGusts());
         verify(weatherStub).getWeather(request);
+        verify(mapper).mapWeatherMsResponseToWeatherSchema(response);
     }
 }
