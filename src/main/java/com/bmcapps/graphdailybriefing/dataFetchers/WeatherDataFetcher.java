@@ -3,6 +3,7 @@ package com.bmcapps.graphdailybriefing.dataFetchers;
 import com.bmcapps.graphdailybriefing.WeatherRequest;
 import com.bmcapps.graphdailybriefing.WeatherResponse;
 import com.bmcapps.graphdailybriefing.WeatherServiceGrpc;
+import com.bmcapps.graphdailybriefing.mapper.WeatherMsResponseToWeatherSchemaMapper;
 import com.bmcapps.graphdailybriefing.model.graphSchema.WeatherSchema;
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsQuery;
@@ -15,9 +16,13 @@ public class WeatherDataFetcher {
 
     private final WeatherServiceGrpc.WeatherServiceBlockingStub weatherStub;
 
+    private final WeatherMsResponseToWeatherSchemaMapper mapper;
+
     @Autowired
-    public WeatherDataFetcher(WeatherServiceGrpc.WeatherServiceBlockingStub weatherStub) {
+    public WeatherDataFetcher(WeatherServiceGrpc.WeatherServiceBlockingStub weatherStub,
+                              WeatherMsResponseToWeatherSchemaMapper mapper) {
         this.weatherStub = weatherStub;
+        this.mapper = mapper;
     }
 
     @DgsQuery(field = "weather")
@@ -27,12 +32,6 @@ public class WeatherDataFetcher {
                 .setState(state)
                 .build();
         WeatherResponse response = weatherStub.getWeather(request);
-        return new WeatherSchema(
-                response.getTemperature(),
-                response.getPrecipitation(),
-                response.getRelativeHumidity(),
-                response.getWindSpeed(),
-                response.getWindDirection(),
-                response.getWindGusts());
+        return mapper.mapWeatherMsResponseToWeatherSchema(response);
     }
 }
