@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package weather;
+
+option java_package = "com.bmcapps.graphdailybriefing";
+option java_multiple_files = true;
+
+service WeatherService {
+  rpc GetWeather (WeatherRequest) returns (WeatherResponse) {}
+}
+
+message WeatherRequest {
+  string city = 1;
+  string state = 2;
+}
+
+message WeatherResponse {
+  double temperature = 1;
+  double precipitation = 2;
+  int32 relativeHumidity = 3;
+  double windSpeed = 4;
+  int32 windDirection = 5;
+  double windGusts = 6;
+}
