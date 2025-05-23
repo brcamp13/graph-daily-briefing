@@ -1,7 +1,11 @@
 package com.bmcapps.graphdailybriefing.dataFetchers;
 
+import com.bmcapps.graphdailybriefing.CryptoCurrency;
+import com.bmcapps.graphdailybriefing.CryptoRequest;
+import com.bmcapps.graphdailybriefing.CryptoResponse;
+import com.bmcapps.graphdailybriefing.CryptoServiceGrpc;
+import com.bmcapps.graphdailybriefing.mapper.CryptoMsResponseToCryptocurrencySchemaMapper;
 import com.bmcapps.graphdailybriefing.model.graphSchema.CryptoSchema;
-import com.bmcapps.graphdailybriefing.service.CryptoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,19 +24,47 @@ import static org.mockito.Mockito.when;
 class CryptoDataFetcherTest {
 
     @Mock
-    private CryptoService cryptoService;
+    private CryptoServiceGrpc.CryptoServiceBlockingStub cryptoStub;
+
+    @Mock
+    private CryptoMsResponseToCryptocurrencySchemaMapper mapper;
 
     private CryptoDataFetcher cryptoDataFetcher;
 
     @BeforeEach
     void setUp() {
-        cryptoDataFetcher = new CryptoDataFetcher(cryptoService);
+        cryptoDataFetcher = new CryptoDataFetcher(cryptoStub, mapper);
     }
 
     @Test
     void getCryptocurrencies_ShouldReturnListOfCryptocurrencies() {
         // Arrange
         List<String> slugs = Arrays.asList("bitcoin", "ethereum");
+
+        CryptoRequest request = CryptoRequest.newBuilder().addAllSlugs(slugs).build();
+
+        CryptoCurrency bitcoinResponse = CryptoCurrency.newBuilder()
+                .setName("Bitcoin")
+                .setSymbol("BTC")
+                .setPrice(50000.0)
+                .setPercentChange24H(1.5)
+                .setPercentChange60D(5.0)
+                .setPercentChange90D(10.0)
+                .setMarketCap(1000000000.0)
+                .build();
+
+        CryptoCurrency ethereumResponse = CryptoCurrency.newBuilder()
+                .setName("Ethereum")
+                .setSymbol("ETH")
+                .setPrice(4000.0)
+                .setPercentChange24H(0.5)
+                .setMarketCap(500000000.0)
+                .build();
+
+        CryptoResponse response = CryptoResponse.newBuilder()
+                .addCurrencies(bitcoinResponse)
+                .addCurrencies(ethereumResponse)
+                .build();
 
         CryptoSchema bitcoinSchema = new CryptoSchema();
         bitcoinSchema.setName("Bitcoin");
@@ -50,12 +82,9 @@ class CryptoDataFetcherTest {
         ethereumSchema.setPercentChange24h(0.5);
         ethereumSchema.setMarketCap(500000000.0);
 
-        List<CryptoSchema> expectedCryptos = Arrays.asList(
-                bitcoinSchema,
-                ethereumSchema
-        );
-
-        when(cryptoService.getCryptocurrencies(slugs)).thenReturn(expectedCryptos);
+        when(cryptoStub.getCryptoCurrencies(request)).thenReturn(response);
+        when(mapper.mapCryptoMsResponseToCryptoSchema(bitcoinResponse)).thenReturn(bitcoinSchema);
+        when(mapper.mapCryptoMsResponseToCryptoSchema(ethereumResponse)).thenReturn(ethereumSchema);
 
         // Act
         List<CryptoSchema> result = cryptoDataFetcher.getCryptocurrencies(slugs);
@@ -63,7 +92,10 @@ class CryptoDataFetcherTest {
         // Assert
         assertNotNull(result);
         assertEquals(2, result.size());
-        assertEquals(expectedCryptos, result);
-        verify(cryptoService).getCryptocurrencies(slugs);
+        assertEquals(bitcoinSchema, result.get(0));
+        assertEquals(ethereumSchema, result.get(1));
+        verify(cryptoStub).getCryptoCurrencies(request);
+        verify(mapper).mapCryptoMsResponseToCryptoSchema(bitcoinResponse);
+        verify(mapper).mapCryptoMsResponseToCryptoSchema(ethereumResponse);
     }
 }

@@ -1,7 +1,10 @@
 package com.bmcapps.graphdailybriefing.dataFetchers;
 
+import com.bmcapps.graphdailybriefing.CryptoServiceGrpc;
+import com.bmcapps.graphdailybriefing.MarketDataRequest;
+import com.bmcapps.graphdailybriefing.MarketDataResponse;
+import com.bmcapps.graphdailybriefing.mapper.CryptoMsResponseToCryptocurrencySchemaMapper;
 import com.bmcapps.graphdailybriefing.model.graphSchema.CryptoMarketDataSchema;
-import com.bmcapps.graphdailybriefing.service.CryptoService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,7 +19,10 @@ import static org.mockito.Mockito.when;
 class CryptoMarketDataFetcherTest {
 
     @Mock
-    private CryptoService cryptoService;
+    private CryptoServiceGrpc.CryptoServiceBlockingStub cryptoServiceBlockingStub;
+
+    @Mock
+    private CryptoMsResponseToCryptocurrencySchemaMapper cryptoMsResponseToCryptocurrencySchemaMapper;
 
     @InjectMocks
     private CryptoMarketDataFetcher cryptoMarketDataFetcher;
@@ -24,11 +30,19 @@ class CryptoMarketDataFetcherTest {
     @Test
     void getCryptoMarketData_ShouldReturnCryptoMarketData() {
         // Arrange
+        MarketDataRequest request = MarketDataRequest.newBuilder().build();
+        MarketDataResponse grpcResponse = MarketDataResponse.newBuilder()
+                .setFearAndGreedIndexValue(55)
+                .setFearAndGreedIndexValueClassification("Neutral")
+                .build();
+
         CryptoMarketDataSchema expectedMarketData = new CryptoMarketDataSchema();
         expectedMarketData.setFearAndGreedIndexValue(55);
         expectedMarketData.setFearAndGreedIndexValueClassification("Neutral");
 
-        when(cryptoService.getCryptoMarketData()).thenReturn(expectedMarketData);
+        when(cryptoServiceBlockingStub.getCryptoMarketData(request)).thenReturn(grpcResponse);
+        when(cryptoMsResponseToCryptocurrencySchemaMapper.mapCryptoMsMarketDataToCryptoMarketDataSchema(grpcResponse))
+                .thenReturn(expectedMarketData);
 
         // Act
         CryptoMarketDataSchema result = cryptoMarketDataFetcher.getCryptoMarketData();
