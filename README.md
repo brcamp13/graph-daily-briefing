@@ -1,7 +1,7 @@
 # GraphDailyBriefing
 
 📋 **Description**  
-GraphDailyBriefing is a Java Spring Boot application that provides a GraphQL interface for accessing weather and cryptocurrency data.
+GraphDailyBriefing is a Java Spring Boot application that provides a GraphQL Interface (utilizing Netflix DGS) for accessing weather and cryptocurrency data. It connects to Weather and Crypto microservices via gRPC.
 
 🛠️ **Prerequisites**
 - Java 21 installed
